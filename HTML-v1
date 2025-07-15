@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Paying Jobs by NAICS Sector with Salary and Application Tracker</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.6; margin: 2em; background-color: #f4f7f6; color: #333; }
+        h1 { color: #2c3e50; text-align: center; margin-bottom: 1em;}
+        h2 { color: #34495e; border-bottom: 2px solid #3498db; padding-bottom: 0.3em; margin-top: 1.5em;}
+        a { color: #3498db; text-decoration: none; font-weight: bold; }
+        a:hover { color: #2980b9; text-decoration: underline; }
+        .sector { background-color: #ffffff; border: 1px solid #dcdcdc; border-radius: 8px; padding: 1em 1.5em; margin-bottom: 1.5em; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .disclaimer { background-color: #fffbe6; border-left: 5px solid #ffc107; padding: 1em 1.5em; margin-bottom: 2em; border-radius: 4px; }
+        ul { list-style-type: none; padding-left: 0; }
+        li { 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 0.7em; 
+            padding-bottom: 0.7em; 
+            border-bottom: 1px solid #ecf0f1;
+        }
+        li:last-child { border-bottom: none; }
+        .job-info { flex-grow: 1; margin-right: 1em; }
+        .salary { color: #555; font-size: 0.9em; display: block; margin-top: 4px; }
+        .checkbox-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px; /* Space between checkboxes */
+            flex-shrink: 0; /* Prevent container from shrinking */
+        }
+        .checkbox-container input[type="checkbox"] {
+            width: 1.3em;
+            height: 1.3em;
+            cursor: pointer;
+        }
+        .applied-label {
+            font-size: 0.85em;
+            color: #7f8c8d;
+            margin-right: 8px;
+            font-weight: 500;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Top 20 Paying Jobs by NAICS Sector</h1>
+
+    <div class="disclaimer">
+        <p><strong>Disclaimer:</strong> Salary ranges are national estimates and may vary significantly based on your location, level of experience, specific employer, and current market conditions. The ranges below generally represent the 10th percentile (entry-level) to the 90th percentile (highly experienced) for each role. Use these figures as a general guide to explore your potential earnings.</p>
+        <p><strong>Tracker Functionality:</strong> Check the boxes to track your applications. Your progress is saved automatically in your browser.</p>
+    </div>
+
+    <div id="jobs-container"></div>
+
+    <script>
+        // Embedded JSON data with salary estimates for all specified sectors
+        const jobData = {
+            "Management of Companies and Enterprises": {
+                "code": "55",
+                "jobs": [
+                    { "title": "Chief Executives", "min_salary": 98000, "max_salary": 250000 },
+                    { "title": "Computer and Information Systems Managers", "min_salary": 90000, "max_salary": 210000 },
+                    { "title": "Marketing Managers", "min_salary": 75000, "max_salary": 208000 },
+                    { "title": "Financial Managers", "min_salary": 75000, "max_salary": 200000 },
+                    { "title": "Sales Managers", "min_salary": 65000, "max_salary": 205000 },
+                    { "title": "Human Resources Managers", "min_salary": 70000, "max_salary": 195000 },
+                    { "title": "Industrial Production Managers", "min_salary": 70000, "max_salary": 180000 },
+                    { "title": "Purchasing Managers", "min_salary": 68000, "max_salary": 175000 },
+                    { "title": "Administrative Services Managers", "min_salary": 58000, "max_salary": 165000 },
+                    { "title": "Transportation, Storage, and Distribution Managers", "min_salary": 57000, "max_salary": 164000 },
+                    { "title": "Training and Development Managers", "min_salary": 65000, "max_salary": 185000 },
+                    { "title": "Compensation and Benefits Managers", "min_salary": 72000, "max_salary": 190000 },
+                    { "title": "Lawyers", "min_salary": 61000, "max_salary": 210000 },
+                    { "title": "Management Analysts", "min_salary": 52000, "max_salary": 160000 },
+                    { "title": "General and Operations Managers", "min_salary": 55000, "max_salary": 195000 },
+                    { "title": "Accountants and Auditors", "min_salary": 45000, "max_salary": 128000 },
+                    { "title": "First-Line Supervisors of Office and Administrative Support Workers", "min_salary": 38000, "max_salary": 95000 },
+                    { "title": "Secretaries and Administrative Assistants, Executive", "min_salary": 45000, "max_salary": 90000 },
+                    { "title": "Bookkeeping, Accounting, and Auditing Clerks", "min_salary": 30000, "max_salary": 65000 },
+                    { "title": "Office Clerks, General", "min_salary": 25000, "max_salary": 55000 }
+                ]
+            },
+            "Utilities": {
+                "code": "22",
+                "jobs": [
+                    {"title": "Nuclear Engineers", "min_salary": 80000, "max_salary": 165000},
+                    {"title": "Power Distributors and Dispatchers", "min_salary": 65000, "max_salary": 125000},
+                    {"title": "Electrical Engineers", "min_salary": 64000, "max_salary": 159000},
+                    {"title": "Nuclear Power Reactor Operators", "min_salary": 75000, "max_salary": 130000},
+                    {"title": "Power Plant Operators", "min_salary": 55000, "max_salary": 110000},
+                    {"title": "Electrical Power-Line Installers and Repairers", "min_salary": 50000, "max_salary": 105000},
+                    {"title": "Gas Plant Operators", "min_salary": 50000, "max_salary": 98000},
+                    {"title": "Electrical and Electronics Repairers, Powerhouse, Substation, and Relay", "min_salary": 60000, "max_salary": 115000},
+                    {"title": "First-Line Supervisors of Production and Operating Workers", "min_salary": 40000, "max_salary": 95000},
+                    {"title": "Water and Wastewater Treatment Plant and System Operators", "min_salary": 34000, "max_salary": 78000},
+                    {"title": "Stationary Engineers and Boiler Operators", "min_salary": 42000, "max_salary": 90000},
+                    {"title": "Substation and Relay Technicians", "min_salary": 58000, "max_salary": 108000},
+                    {"title": "Solar Energy Installation Managers", "min_salary": 48000, "max_salary": 100000},
+                    {"title": "Wind Turbine Technicians", "min_salary": 45000, "max_salary": 85000},
+                    {"title": "Telecommunications Equipment Installers and Repairers", "min_salary": 40000, "max_salary": 80000},
+                    {"title": "Plant and System Operators, All Other", "min_salary": 38000, "max_salary": 82000},
+                    {"title": "Water Treatment Plant and System Operators", "min_salary": 33000, "max_salary": 77000},
+                    {"title": "Septic Tank Servicers and Sewer Pipe Cleaners", "min_salary": 30000, "max_salary": 65000},
+                    {"title": "Refuse and Recyclable Material Collectors", "min_salary": 28000, "max_salary": 60000},
+                    {"title": "Meter Readers, Utilities", "min_salary": 30000, "max_salary": 62000}
+                ]
+            },
+            "Construction": {
+                "code": "23",
+                "jobs": [
+                    {"title": "Construction Managers", "min_salary": 60000, "max_salary": 170000},
+                    {"title": "Elevator and Escalator Installers and Repairers", "min_salary": 55000, "max_salary": 130000},
+                    {"title": "Boilermakers", "min_salary": 45000, "max_salary": 98000},
+                    {"title": "First-Line Supervisors of Construction Trades and Extraction Workers", "min_salary": 48000, "max_salary": 110000 },
+                    {"title": "Structural Iron and Steel Workers", "min_salary": 38000, "max_salary": 95000},
+                    {"title": "Electricians", "min_salary": 37000, "max_salary": 98000},
+                    {"title": "Plumbers, Pipefitters, and Steamfitters", "min_salary": 36000, "max_salary": 99000},
+                    {"title": "Piledriver Operators", "min_salary": 40000, "max_salary": 96000},
+                    {"title": "Operating Engineers and Other Construction Equipment Operators", "min_salary": 35000, "max_salary": 85000},
+                    {"title": "Hazardous Materials Removal Workers", "min_salary": 33000, "max_salary": 80000},
+                    {"title": "Brickmasons and Blockmasons", "min_salary": 35000, "max_salary": 82000},
+                    {"title": "Cement Masons and Concrete Finishers", "min_salary": 32000, "max_salary": 75000},
+                    {"title": "Stonemasons", "min_salary": 33000, "max_salary": 78000},
+                    {"title": "Carpenters", "min_salary": 31000, "max_salary": 81000},
+                    {"title": "Drywall and Ceiling Tile Installers", "min_salary": 32000, "max_salary": 79000},
+                    {"title": "Glaziers", "min_salary": 33000, "max_salary": 77000},
+                    {"title": "Tapers", "min_salary": 38000, "max_salary": 82000},
+                    {"title": "Roofers", "min_salary": 29000, "max_salary": 68000},
+                    {"title": "Painters, Construction and Maintenance", "min_salary": 29000, "max_salary": 65000},
+                    {"title": "Insulation Workers, Floor, Ceiling, and Wall", "min_salary": 30000, "max_salary": 76000}
+                ]
+            },
+            "Manufacturing": {
+                "code": "31-33",
+                "jobs": [
+                    {"title": "Chemical Engineers", "min_salary": 70000, "max_salary": 175000},
+                    {"title": "Industrial Engineers", "min_salary": 60000, "max_salary": 140000},
+                    {"title": "Tool and Die Makers", "min_salary": 38000, "max_salary": 80000},
+                    {"title": "First-Line Supervisors of Production and Operating Workers", "min_salary": 40000, "max_salary": 95000},
+                    {"title": "Machinists", "min_salary": 32000, "max_salary": 70000},
+                    {"title": "Industrial Machinery Mechanics", "min_salary": 36000, "max_salary": 80000},
+                    {"title": "Welders, Cutters, Solderers, and Brazers", "min_salary": 31000, "max_salary": 68000},
+                    {"title": "Computer-Controlled Machine Tool Operators, Metal and Plastic", "min_salary": 30000, "max_salary": 65000},
+                    {"title": "Inspectors, Testers, Sorters, Samplers, and Weighers", "min_salary": 28000, "max_salary": 70000},
+                    {"title": "Maintenance and Repair Workers, General", "min_salary": 29000, "max_salary": 66000},
+                    {"title": "Cabinetmakers and Bench Carpenters", "min_salary": 27000, "max_salary": 58000},
+                    {"title": "Upholsterers", "min_salary": 26000, "max_salary": 60000},
+                    {"title": "Furniture Finishers", "min_salary": 25000, "max_salary": 55000},
+                    {"title": "Butchers and Meat Cutters", "min_salary": 26000, "max_salary": 52000},
+                    {"title": "Assemblers and Fabricators, All Other", "min_salary": 24000, "max_salary": 50000},
+                    {"title": "Packaging and Filling Machine Operators and Tenders", "min_salary": 23000, "max_salary": 48000},
+                    {"title": "Food Processing Workers, All Other", "min_salary": 24000, "max_salary": 45000},
+                    {"title": "Tailors, Dressmakers, and Custom Sewers", "min_salary": 23000, "max_salary": 50000},
+                    {"title": "Textile Knitting and Weaving Machine Setters, Operators, and Tenders", "min_salary": 22000, "max_salary": 47000},
+                    {"title": "Sewing Machine Operators", "min_salary": 22000, "max_salary": 42000}
+                ]
+            },
+            "Wholesale Trade": {
+                "code": "42",
+                "jobs": [
+                    {"title": "Sales Managers", "min_salary": 65000, "max_salary": 205000},
+                    {"title": "Sales Engineers", "min_salary": 64000, "max_salary": 180000},
+                    {"title": "Purchasing Managers", "min_salary": 68000, "max_salary": 175000},
+                    {"title": "First-Line Supervisors of Non-Retail Sales Workers", "min_salary": 48000, "max_salary": 140000},
+                    {"title": "Sales Representatives, Wholesale and Manufacturing, Technical and Scientific Products", "min_salary": 50000, "max_salary": 170000},
+                    {"title": "Sales Representatives, Wholesale and Manufacturing, Except Technical", "min_salary": 35000, "max_salary": 130000},
+                    {"title": "Buyers and Purchasing Agents", "min_salary": 42000, "max_salary": 110000},
+                    {"title": "Heavy and Tractor-Trailer Truck Drivers", "min_salary": 32000, "max_salary": 75000},
+                    {"title": "First-Line Supervisors of Office and Administrative Support Workers", "min_salary": 38000, "max_salary": 95000 },
+                    {"title": "Wholesale and Retail Buyers, Except Farm Products", "min_salary": 38000, "max_salary": 105000},
+                    {"title": "Industrial Truck and Tractor Operators", "min_salary": 28000, "max_salary": 55000},
+                    {"title": "Driver/Sales Workers", "min_salary": 24000, "max_salary": 58000},
+                    {"title": "Light Truck Drivers", "min_salary": 25000, "max_salary": 60000},
+                    {"title": "Shipping, Receiving, and Inventory Clerks", "min_salary": 26000, "max_salary": 50000},
+                    {"title": "Demonstrators and Product Promoters", "min_salary": 23000, "max_salary": 62000},
+                    {"title": "Order Clerks", "min_salary": 25000, "max_salary": 52000},
+                    {"title": "Laborers and Freight, Stock, and Material Movers, Hand", "min_salary": 24000, "max_salary": 48000},
+                    {"title": "Stockers and Order Fillers", "min_salary": 23000, "max_salary": 45000},
+                    {"title": "Packaging and Filling Machine Operators and Tenders", "min_salary": 23000, "max_salary": 48000},
+                    {"title": "Cleaners of Vehicles and Equipment", "min_salary": 22000, "max_salary": 43000}
+                ]
+            },
+            "Retail Trade": {
+                "code": "44-45",
+                "jobs": [
+                    {"title": "Pharmacists", "min_salary": 90000, "max_salary": 160000},
+                    {"title": "Sales Managers", "min_salary": 65000, "max_salary": 205000},
+                    {"title": "First-Line Supervisors of Retail Sales Workers", "min_salary": 30000, "max_salary": 75000},
+                    {"title": "Opticians, Dispensing", "min_salary": 28000, "max_salary": 60000},
+                    {"title": "Automotive Service Technicians and Mechanics", "min_salary": 28000, "max_salary": 72000},
+                    {"title": "Jewelers and Precious Stone and Metal Workers", "min_salary": 28000, "max_salary": 78000},
+                    {"title": "First-Line Supervisors of Non-Retail Sales Workers", "min_salary": 48000, "max_salary": 140000},
+                    {"title": "Parts Salespersons", "min_salary": 25000, "max_salary": 60000},
+                    {"title": "Pharmacy Technicians", "min_salary": 28000, "max_salary": 50000},
+                    {"title": "Customer Service Representatives", "min_salary": 26000, "max_salary": 55000},
+                    {"title": "Butchers and Meat Cutters", "min_salary": 26000, "max_salary": 52000},
+                    {"title": "Merchandise Displayers and Window Trimmers", "min_salary": 24000, "max_salary": 50000},
+                    {"title": "Retail Salespersons", "min_salary": 22000, "max_salary": 48000},
+                    {"title": "Tire Repairers and Changers", "min_salary": 25000, "max_salary": 47000},
+                    {"title": "Counter and Rental Clerks", "min_salary": 22000, "max_salary": 46000},
+                    {"title": "Bakers", "min_salary": 24000, "max_salary": 45000},
+                    {"title": "Stockers and Order Fillers", "min_salary": 23000, "max_salary": 45000},
+                    {"title": "Food Preparation Workers", "min_salary": 21000, "max_salary": 38000},
+                    {"title": "Cashiers", "min_salary": 20000, "max_salary": 35000},
+                    {"title": "Telemarketers", "min_salary": 22000, "max_salary": 50000}
+                ]
+            },
+            "Transportation and Warehousing": {
+                "code": "48-49",
+                "jobs": [
+                    {"title": "Airline Pilots, Copilots, and Flight Engineers", "min_salary": 80000, "max_salary": 220000},
+                    {"title": "Air Traffic Controllers", "min_salary": 75000, "max_salary": 190000},
+                    {"title": "Ship and Boat Captains and Operators", "min_salary": 45000, "max_salary": 145000},
+                    {"title": "Locomotive Engineers", "min_salary": 50000, "max_salary": 110000},
+                    {"title": "First-Line Supervisors of Transportation and Material-Moving Workers", "min_salary": 38000, "max_salary": 90000},
+                    {"title": "Railroad Conductors and Yardmasters", "min_salary": 45000, "max_salary": 95000},
+                    {"title": "Public Transportation Inspectors", "min_salary": 42000, "max_salary": 105000},
+                    {"title": "Heavy and Tractor-Trailer Truck Drivers", "min_salary": 32000, "max_salary": 75000},
+                    {"title": "Sailors and Marine Oilers", "min_salary": 30000, "max_salary": 78000},
+                    {"title": "Dispatchers, Except Police, Fire, and Ambulance", "min_salary": 30000, "max_salary": 72000},
+                    {"title": "Postal Service Mail Carriers", "min_salary": 40000, "max_salary": 70000},
+                    {"title": "Subway and Streetcar Operators", "min_salary": 40000, "max_salary": 80000},
+                    {"title": "Bus Drivers, Transit and Intercity", "min_salary": 28000, "max_salary": 65000},
+                    {"title": "Bus Drivers, School", "min_salary": 25000, "max_salary": 55000},
+                    {"title": "Couriers and Messengers", "min_salary": 24000, "max_salary": 58000},
+                    {"title": "Traffic Technicians", "min_salary": 35000, "max_salary": 85000},
+                    {"title": "Bridge and Lock Tenders", "min_salary": 31000, "max_salary": 70000},
+                    {"title": "Tank Car, Truck, and Ship Loaders", "min_salary": 28000, "max_salary": 60000},
+                    {"title": "Automotive and Watercraft Service Attendants", "min_salary": 23000, "max_salary": 42000},
+                    {"title": "Parking Attendants", "min_salary": 21000, "max_salary": 38000}
+                ]
+            },
+            "Information": {
+                "code": "51",
+                "jobs": [
+                    { "title": "Computer and Information Systems Managers", "min_salary": 90000, "max_salary": 210000 },
+                    { "title": "Software Developers", "min_salary": 70000, "max_salary": 180000 },
+                    { "title": "Computer Network Architects", "min_salary": 75000, "max_salary": 170000 },
+                    { "title": "Information Security Analysts", "min_salary": 65000, "max_salary": 165000 },
+                    { "title": "Database Administrators and Architects", "min_salary": 55000, "max_salary": 155000 },
+                    { "title": "Computer Programmers", "min_salary": 50000, "max_salary": 145000 },
+                    { "title": "Network and Computer Systems Administrators", "min_salary": 52000, "max_salary": 135000 },
+                    { "title": "Web Developers and Digital Designers", "min_salary": 40000, "max_salary": 130000 },
+                    { "title": "Producers and Directors", "min_salary": 40000, "max_salary": 180000 },
+                    { "title": "Telecommunications Engineering Specialists", "min_salary": 55000, "max_salary": 125000 },
+                    { "title": "Technical Writers", "min_salary": 48000, "max_salary": 120000 },
+                    { "title": "Editors", "min_salary": 38000, "max_salary": 115000 },
+                    { "title": "Film and Video Editors", "min_salary": 36000, "max_salary": 130000 },
+                    { "title": "Public Relations Specialists", "min_salary": 36000, "max_salary": 118000 },
+                    { "title": "Writers and Authors", "min_salary": 35000, "max_salary": 125000 },
+                    { "title": "Reporters and Correspondents", "min_salary": 28000, "max_salary": 95000 },
+                    { "title": "Sound Engineering Technicians", "min_salary": 30000, "max_salary": 99000 },
+                    { "title": "Broadcast Technicians", "min_salary": 28000, "max_salary": 80000 },
+                    { "title": "Librarians and Media Collections Specialists", "min_salary": 37000, "max_salary": 97000 },
+                    { "title": "Library Technicians", "min_salary": 26000, "max_salary": 55000 }
+                ]
+            },
+            "Finance and Insurance": {
+                "code": "52",
+                "jobs": [
+                    { "title": "Chief Executives", "min_salary": 98000, "max_salary": 250000 },
+                    { "title": "Financial Managers", "min_salary": 75000, "max_salary": 200000 },
+                    { "title": "Actuaries", "min_salary": 65000, "max_salary": 190000 },
+                    { "title": "Personal Financial Advisors", "min_salary": 45000, "max_salary": 200000 },
+                    { "title": "Securities, Commodities, and Financial Services Sales Agents", "min_salary": 40000, "max_salary": 180000 },
+                    { "title": "Financial Analysts", "min_salary": 55000, "max_salary": 160000 },
+                    { "title": "Insurance Underwriters", "min_salary": 45000, "max_salary": 125000 },
+                    { "title": "Loan Officers", "min_salary": 40000, "max_salary": 130000 },
+                    { "title": "Budget Analysts", "min_salary": 55000, "max_salary": 120000 },
+                    { "title": "Credit Analysts", "min_salary": 45000, "max_salary": 115000 },
+                    { "title": "Accountants and Auditors", "min_salary": 45000, "max_salary": 128000 },
+                    { "title": "Financial Examiners", "min_salary": 50000, "max_salary": 150000 },
+                    { "title": "Tax Examiners and Collectors, and Revenue Agents", "min_salary": 38000, "max_salary": 100000 },
+                    { "title": "Insurance Sales Agents", "min_salary": 30000, "max_salary": 125000 },
+                    { "title": "Claims Adjusters, Examiners, and Investigators", "min_salary": 42000, "max_salary": 105000 },
+                    { "title": "Insurance Appraisers, Auto Damage", "min_salary": 45000, "max_salary": 85000 },
+                    { "title": "Bookkeeping, Accounting, and Auditing Clerks", "min_salary": 30000, "max_salary": 65000 },
+                    { "title": "Tellers", "min_salary": 25000, "max_salary": 45000 },
+                    { "title": "New Account Clerks", "min_salary": 28000, "max_salary": 50000 },
+                    { "title": "Bill and Account Collectors", "min_salary": 29000, "max_salary": 60000 }
+                ]
+            },
+            "Real Estate and Rental and Leasing": {
+                "code": "53",
+                "jobs": [
+                    {"title": "Real Estate Brokers", "min_salary": 35000, "max_salary": 175000},
+                    {"title": "Property, Real Estate, and Community Association Managers", "min_salary": 35000, "max_salary": 125000},
+                    {"title": "Appraisers and Assessors of Real Estate", "min_salary": 36000, "max_salary": 110000},
+                    {"title": "Sales Managers", "min_salary": 65000, "max_salary": 205000},
+                    {"title": "General and Operations Managers", "min_salary": 55000, "max_salary": 195000},
+                    {"title": "Real Estate Sales Agents", "min_salary": 28000, "max_salary": 115000},
+                    {"title": "Leasing Consultants", "min_salary": 29000, "max_salary": 65000},
+                    {"title": "First-Line Supervisors of Personal Service Workers", "min_salary": 30000, "max_salary": 68000},
+                    {"title": "Gaming Surveillance Officers and Gaming Investigators", "min_salary": 28000, "max_salary": 60000},
+                    {"title": "First-Line Supervisors of Office and Administrative Support Workers", "min_salary": 38000, "max_salary": 95000},
+                    {"title": "Concierges", "min_salary": 26000, "max_salary": 52000},
+                    {"title": "Maintenance and Repair Workers, General", "min_salary": 29000, "max_salary": 66000},
+                    {"title": "Security Guards", "min_salary": 24000, "max_salary": 50000},
+                    {"title": "Customer Service Representatives", "min_salary": 26000, "max_salary": 55000},
+                    {"title": "Grounds Maintenance Workers", "min_salary": 25000, "max_salary": 48000},
+                    {"title": "Secretaries and Administrative Assistants", "min_salary": 28000, "max_salary": 62000},
+                    {"title": "Office Clerks, General", "min_salary": 25000, "max_salary": 55000},
+                    {"title": "Rental Clerks", "min_salary": 23000, "max_salary": 50000},
+                    {"title": "Janitors and Cleaners, Except Maids", "min_salary": 22000, "max_salary": 45000}
+                ]
+            },
+            "Professional, Scientific, and Technical Services": {
+                "code": "54",
+                "jobs": [
+                    { "title": "Lawyers", "min_salary": 61000, "max_salary": 210000 },
+                    { "title": "Physicists", "min_salary": 78000, "max_salary": 200000 },
+                    { "title": "Judges, Magistrate Judges, and Magistrates", "min_salary": 65000, "max_salary": 190000 },
+                    { "title": "Architects, Except Landscape and Naval", "min_salary": 52000, "max_salary": 140000 },
+                    { "title": "Veterinarians", "min_salary": 60000, "max_salary": 165000 },
+                    { "title": "Civil Engineers", "min_salary": 58000, "max_salary": 140000 },
+                    { "title": "Environmental Engineers", "min_salary": 55000, "max_salary": 145000 },
+                    { "title": "Management Analysts", "min_salary": 52000, "max_salary": 160000 },
+                    { "title": "Chemists", "min_salary": 48000, "max_salary": 135000 },
+                    { "title": "Market Research Analysts and Marketing Specialists", "min_salary": 40000, "max_salary": 128000 },
+                    { "title": "Epidemiologists", "min_salary": 50000, "max_salary": 125000 },
+                    { "title": "Zoologists and Wildlife Biologists", "min_salary": 42000, "max_salary": 105000 },
+                    { "title": "Surveyors", "min_salary": 39000, "max_salary": 102000 },
+                    { "title": "Paralegals and Legal Assistants", "min_salary": 35000, "max_salary": 85000 },
+                    { "title": "Industrial Designers", "min_salary": 41000, "max_salary": 115000 },
+                    { "title": "Graphic Designers", "min_salary": 32000, "max_salary": 95000 },
+                    { "title": "Interior Designers", "min_salary": 33000, "max_salary": 98000 },
+                    { "title": "Cartographers and Photogrammetrists", "min_salary": 45000, "max_salary": 110000 },
+                    { "title": "Veterinary Technologists and Technicians", "min_salary": 29000, "max_salary": 55000 },
+                    { "title": "Photographers", "min_salary": 24000, "max_salary": 78000 }
+                ]
+            },
+            "Administrative and Support and Waste Management and Remediation Services": {
+                "code": "56",
+                "jobs": [
+                    {"title": "General and Operations Managers", "min_salary": 55000, "max_salary": 195000},
+                    {"title": "Financial Managers", "min_salary": 75000, "max_salary": 200000},
+                    {"title": "Meeting, Convention, and Event Planners", "min_salary": 34000, "max_salary": 95000},
+                    {"title": "First-Line Supervisors of Office and Administrative Support Workers", "min_salary": 38000, "max_salary": 95000},
+                    {"title": "Human Resources Specialists", "min_salary": 40000, "max_salary": 108000},
+                    {"title": "Hazardous Materials Removal Workers", "min_salary": 33000, "max_salary": 80000},
+                    {"title": "Travel Agents", "min_salary": 28000, "max_salary": 70000},
+                    {"title": "Customer Service Representatives", "min_salary": 26000, "max_salary": 55000},
+                    {"title": "Tree Trimmers and Pruners", "min_salary": 30000, "max_salary": 62000},
+                    {"title": "Septic Tank Servicers and Sewer Pipe Cleaners", "min_salary": 30000, "max_salary": 65000},
+                    {"title": "Secretaries and Administrative Assistants", "min_salary": 28000, "max_salary": 62000},
+                    {"title": "Office Clerks, General", "min_salary": 25000, "max_salary": 55000},
+                    {"title": "Tour Guides and Escorts", "min_salary": 24000, "max_salary": 50000},
+                    {"title": "Pesticide Handlers, Sprayers, and Applicators, Vegetation", "min_salary": 28000, "max_salary": 58000},
+                    {"title": "Security Guards", "min_salary": 24000, "max_salary": 50000},
+                    {"title": "Landscaping and Groundskeeping Workers", "min_salary": 25000, "max_salary": 48000},
+                    {"title": "Refuse and Recyclable Material Collectors", "min_salary": 28000, "max_salary": 60000},
+                    {"title": "Telemarketers", "min_salary": 22000, "max_salary": 50000},
+                    {"title": "Janitors and Cleaners, Except Maids", "min_salary": 22000, "max_salary": 45000},
+                    {"title": "Maids and Housekeeping Cleaners", "min_salary": 21000, "max_salary": 38000}
+                ]
+            },
+            "Educational Services": {
+                "code": "61",
+                "jobs": [
+                    {"title": "Postsecondary Teachers", "min_salary": 45000, "max_salary": 180000},
+                    {"title": "Education Administrators, All Other", "min_salary": 60000, "max_salary": 150000},
+                    {"title": "Instructional Coordinators", "min_salary": 42000, "max_salary": 105000},
+                    {"title": "Secondary School Teachers", "min_salary": 41000, "max_salary": 98000},
+                    {"title": "Middle School Teachers", "min_salary": 40000, "max_salary": 96000},
+                    {"title": "Elementary School Teachers", "min_salary": 39000, "max_salary": 95000},
+                    {"title": "Special Education Teachers, All Other", "min_salary": 41000, "max_salary": 100000},
+                    {"title": "Career/Technical Education Teachers, Secondary School", "min_salary": 42000, "max_salary": 97000},
+                    {"title": "Librarians and Media Collections Specialists", "min_salary": 37000, "max_salary": 97000 },
+                    {"title": "Coaches and Scouts", "min_salary": 25000, "max_salary": 85000},
+                    {"title": "Fitness and Wellness Instructors and Coordinators", "min_salary": 25000, "max_salary": 78000},
+                    {"title": "Self-Enrichment Teachers", "min_salary": 24000, "max_salary": 80000},
+                    {"title": "Tutors", "min_salary": 22000, "max_salary": 65000},
+                    {"title": "Preschool Teachers, Except Special Education", "min_salary": 24000, "max_salary": 55000},
+                    {"title": "Substitute Teachers, Short-Term", "min_salary": 21000, "max_salary": 50000},
+                    {"title": "Library Technicians", "min_salary": 26000, "max_salary": 55000 },
+                    {"title": "Teacher Assistants", "min_salary": 20000, "max_salary": 43000},
+                    {"title": "Recreation Workers", "min_salary": 22000, "max_salary": 48000},
+                    {"title": "Childcare Workers", "min_salary": 20000, "max_salary": 37000},
+                    {"title": "School Bus Monitors", "min_salary": 20000, "max_salary": 40000}
+                ]
+            },
+            "Health Care and Social Assistance": {
+                "code": "62",
+                "jobs": [
+                    { "title": "Anesthesiologists", "min_salary": 180000, "max_salary": 350000 },
+                    { "title": "Surgeons, Except Ophthalmologists", "min_salary": 150000, "max_salary": 340000 },
+                    { "title": "Psychiatrists", "min_salary": 100000, "max_salary": 280000 },
+                    { "title": "Physicians, All Other", "min_salary": 120000, "max_salary": 270000 },
+                    { "title": "Dentists, General", "min_salary": 80000, "max_salary": 240000 },
+                    { "title": "Pharmacists", "min_salary": 90000, "max_salary": 160000 },
+                    { "title": "Physician Assistants", "min_salary": 85000, "max_salary": 155000 },
+                    { "title": "Nurse Practitioners", "min_salary": 80000, "max_salary": 150000 },
+                    { "title": "Medical and Health Services Managers", "min_salary": 60000, "max_salary": 180000 },
+                    { "title": "Occupational Therapists", "min_salary": 60000, "max_salary": 125000 },
+                    { "title": "Physical Therapists", "min_salary": 60000, "max_salary": 120000 },
+                    { "title": "Speech-Language Pathologists", "min_salary": 55000, "max_salary": 115000 },
+                    { "title": "Registered Nurses", "min_salary": 53000, "max_salary": 115000 },
+                    { "title": "Marriage and Family Therapists", "min_salary": 37000, "max_salary": 90000 },
+                    { "title": "Social Workers", "min_salary": 34000, "max_salary": 82000 },
+                    { "title": "Substance Abuse, Behavioral Disorder, and Mental Health Counselors", "min_salary": 32000, "max_salary": 78000 },
+                    { "title": "Medical Assistants", "min_salary": 28000, "max_salary": 50000 },
+                    { "title": "Nursing Assistants", "min_salary": 24000, "max_salary": 43000 },
+                    { "title": "Home Health Aides", "min_salary": 23000, "max_salary": 38000 },
+                    { "title": "Personal Care Aides", "min_salary": 22000, "max_salary": 37000 }
+                ]
+            },
+            "Arts, Entertainment, and Recreation": {
+                "code": "71",
+                "jobs": [
+                    {"title": "Athletes and Sports Competitors", "min_salary": 25000, "max_salary": 200000 },
+                    {"title": "Producers and Directors", "min_salary": 40000, "max_salary": 180000},
+                    {"title": "Art Directors", "min_salary": 55000, "max_salary": 170000},
+                    {"title": "Music Directors and Composers", "min_salary": 30000, "max_salary": 120000},
+                    {"title": "Actors", "min_salary": 22000, "max_salary": 110000},
+                    {"title": "Coaches and Scouts", "min_salary": 25000, "max_salary": 85000},
+                    {"title": "Fine Artists, Including Painters, Sculptors, and Illustrators", "min_salary": 22000, "max_salary": 115000},
+                    {"title": "Musicians and Singers", "min_salary": 24000, "max_salary": 100000},
+                    {"title": "Dancers", "min_salary": 21000, "max_salary": 75000},
+                    {"title": "Choreographers", "min_salary": 25000, "max_salary": 80000},
+                    {"title": "Gaming Supervisors", "min_salary": 35000, "max_salary": 88000},
+                    {"title": "Umpires, Referees, and Other Sports Officials", "min_salary": 21000, "max_salary": 65000},
+                    {"title": "Fitness and Wellness Instructors and Coordinators", "min_salary": 25000, "max_salary": 78000},
+                    {"title": "Entertainers and Performers, All Other", "min_salary": 20000, "max_salary": 90000},
+                    {"title": "Craft Artists", "min_salary": 22000, "max_salary": 60000},
+                    {"title": "Recreation Workers", "min_salary": 22000, "max_salary": 48000},
+                    {"title": "Tour Guides and Escorts", "min_salary": 24000, "max_salary": 50000},
+                    {"title": "Gaming Dealers", "min_salary": 20000, "max_salary": 45000},
+                    {"title": "Amusement and Recreation Attendants", "min_salary": 20000, "max_salary": 35000},
+                    {"title": "Ushers, Lobby Attendants, and Ticket Takers", "min_salary": 19000, "max_salary": 34000}
+                ]
+            },
+            "Accommodation and Food Services": {
+                "code": "72",
+                "jobs": [
+                    {"title": "Food Service Managers", "min_salary": 36000, "max_salary": 100000},
+                    {"title": "Lodging Managers", "min_salary": 35000, "max_salary": 95000},
+                    {"title": "Chefs and Head Cooks", "min_salary": 30000, "max_salary": 85000},
+                    {"title": "First-Line Supervisors of Food Preparation and Serving Workers", "min_salary": 26000, "max_salary": 60000},
+                    {"title": "Gaming Supervisors", "min_salary": 35000, "max_salary": 88000},
+                    {"title": "First-Line Supervisors of Housekeeping and Janitorial Workers", "min_salary": 28000, "max_salary": 62000},
+                    {"title": "Concierges", "min_salary": 26000, "max_salary": 52000},
+                    {"title": "Cooks, Restaurant", "min_salary": 22000, "max_salary": 45000},
+                    {"title": "Cooks, Institution and Cafeteria", "min_salary": 23000, "max_salary": 43000},
+                    {"title": "Hotel, Motel, and Resort Desk Clerks", "min_salary": 22000, "max_salary": 40000},
+                    {"title": "Baggage Porters and Bellhops", "min_salary": 21000, "max_salary": 42000},
+                    {"title": "Bartenders", "min_salary": 20000, "max_salary": 48000},
+                    {"title": "Maids and Housekeeping Cleaners", "min_salary": 21000, "max_salary": 38000},
+                    {"title": "Waiters and Waitresses", "min_salary": 19000, "max_salary": 45000},
+                    {"title": "Food Preparation Workers", "min_salary": 21000, "max_salary": 38000},
+                    {"title": "Gaming Dealers", "min_salary": 20000, "max_salary": 45000},
+                    {"title": "Hosts and Hostesses, Restaurant, Lounge, and Coffee Shop", "min_salary": 20000, "max_salary": 36000},
+                    {"title": "Fast Food and Counter Workers", "min_salary": 19000, "max_salary": 32000},
+                    {"title": "Dining Room and Cafeteria Attendants and Bartender Helpers", "min_salary": 19000, "max_salary": 34000},
+                    {"title": "Dishwashers", "min_salary": 18000, "max_salary": 30000}
+                ]
+            },
+            "Other Services (except Public Administration)": {
+                "code": "81",
+                "jobs": [
+                    {"title": "First-Line Supervisors of Mechanics, Installers, and Repairers", "min_salary": 45000, "max_salary": 115000},
+                    {"title": "Funeral Home Managers", "min_salary": 48000, "max_salary": 140000},
+                    {"title": "Computer, Automated Teller, and Office Machine Repairers", "min_salary": 32000, "max_salary": 75000},
+                    {"title": "Automotive Service Technicians and Mechanics", "min_salary": 28000, "max_salary": 72000},
+                    {"title": "Small Engine Mechanics", "min_salary": 27000, "max_salary": 60000},
+                    {"title": "Electronic Home Entertainment Equipment Installers and Repairers", "min_salary": 29000, "max_salary": 65000},
+                    {"title": "Motorcycle Mechanics", "min_salary": 28000, "max_salary": 62000},
+                    {"title": "Embalmers", "min_salary": 33000, "max_salary": 75000},
+                    {"title": "Clergy", "min_salary": 30000, "max_salary": 85000},
+                    {"title": "Directors, Religious Activities and Education", "min_salary": 29000, "max_salary": 80000},
+                    {"title": "Hairdressers, Hairstylists, and Cosmetologists", "min_salary": 21000, "max_salary": 50000},
+                    {"title": "Barbers", "min_salary": 22000, "max_salary": 55000},
+                    {"title": "Manicurists and Pedicurists", "min_salary": 20000, "max_salary": 45000},
+                    {"title": "Animal Trainers", "min_salary": 24000, "max_salary": 62000},
+                    {"title": "Funeral Attendants", "min_salary": 22000, "max_salary": 45000},
+                    {"title": "Parking Enforcement Workers", "min_salary": 30000, "max_salary": 68000},
+                    {"title": "Nonfarm Animal Caretakers", "min_salary": 21000, "max_salary": 42000},
+                    {"title": "Pet Caretakers", "min_salary": 21000, "max_salary": 43000},
+                    {"title": "Childcare Workers", "min_salary": 20000, "max_salary": 37000},
+                    {"title": "Religious Workers, All Other", "min_salary": 24000, "max_salary": 60000}
+                ]
+            },
+            "Public Administration": {
+                "code": "92",
+                "jobs": [
+                    {"title": "Air Traffic Controllers", "min_salary": 75000, "max_salary": 190000},
+                    {"title": "Emergency Management Directors", "min_salary": 45000, "max_salary": 140000},
+                    {"title": "First-Line Supervisors of Police and Detectives", "min_salary": 60000, "max_salary": 145000},
+                    {"title": "Urban and Regional Planners", "min_salary": 50000, "max_salary": 120000},
+                    {"title": "Detectives and Criminal Investigators", "min_salary": 55000, "max_salary": 135000},
+                    {"title": "Police and Sheriff's Patrol Officers", "min_salary": 45000, "max_salary": 105000},
+                    {"title": "Conservation Scientists", "min_salary": 42000, "max_salary": 102000},
+                    {"title": "Firefighters", "min_salary": 30000, "max_salary": 90000},
+                    {"title": "Compliance Officers", "min_salary": 40000, "max_salary": 115000},
+                    {"title": "Tax Examiners and Collectors, and Revenue Agents", "min_salary": 38000, "max_salary": 100000 },
+                    {"title": "Judicial Law Clerks", "min_salary": 35000, "max_salary": 95000},
+                    {"title": "Coroners", "min_salary": 40000, "max_salary": 98000},
+                    {"title": "Correctional Officers and Jailers", "min_salary": 33000, "max_salary": 78000},
+                    {"title": "Postmasters and Mail Superintendents", "min_salary": 60000, "max_salary": 95000},
+                    {"title": "Transportation Security Screeners", "min_salary": 35000, "max_salary": 60000},
+                    {"title": "Inspectors, Testers, Sorters, Samplers, and Weighers", "min_salary": 28000, "max_salary": 70000},
+                    {"title": "Eligibility Interviewers, Government Programs", "min_salary": 32000, "max_salary": 65000},
+                    {"title": "Social and Human Service Assistants", "min_salary": 28000, "max_salary": 55000},
+                    {"title": "Court, Municipal, and License Clerks", "min_salary": 29000, "max_salary": 60000},
+                    {"title": "Postal Service Mail Sorters, Processors, and Machine Operators", "min_salary": 38000, "max_salary": 68000}
+                ]
+            },
+            "Agriculture, Forestry, Fishing and Hunting": {
+                 "code": "11",
+                 "jobs": [
+                    {"title": "Farm and Ranch Managers", "min_salary": 45000, "max_salary": 130000},
+                    {"title": "Agricultural Engineers", "min_salary": 55000, "max_salary": 125000},
+                    {"title": "Food Scientists and Technologists", "min_salary": 45000, "max_salary": 120000},
+                    {"title": "Conservation Scientists", "min_salary": 42000, "max_salary": 102000},
+                    {"title": "Animal Scientists", "min_salary": 40000, "max_salary": 115000},
+                    {"title": "Soil and Plant Scientists", "min_salary": 41000, "max_salary": 110000},
+                    {"title": "Foresters", "min_salary": 40000, "max_salary": 95000},
+                    {"title": "First-Line Supervisors of Farming, Fishing, and Forestry Workers", "min_salary": 32000, "max_salary": 75000},
+                    {"title": "Fish and Game Wardens", "min_salary": 40000, "max_salary": 80000},
+                    {"title": "Agricultural Inspectors", "min_salary": 32000, "max_salary": 70000},
+                    {"title": "Nursery and Greenhouse Managers", "min_salary": 30000, "max_salary": 65000},
+                    {"title": "Logging Workers", "min_salary": 28000, "max_salary": 58000},
+                    {"title": "Pesticide Handlers, Sprayers, and Applicators, Vegetation", "min_salary": 28000, "max_salary": 58000},
+                    {"title": "Agricultural Equipment Operators", "min_salary": 26000, "max_salary": 50000},
+                    {"title": "Forest and Conservation Workers", "min_salary": 25000, "max_salary": 52000},
+                    {"title": "Hunters and Trappers", "min_salary": 24000, "max_salary": 55000},
+                    {"title": "Farmworkers, Farm, Ranch, and Aquacultural Animals", "min_salary": 23000, "max_salary": 40000},
+                    {"title": "Farmworkers and Laborers, Crop, Nursery, and Greenhouse", "min_salary": 22000, "max_salary": 38000},
+                    {"title": "Graders and Sorters, Agricultural Products", "min_salary": 21000, "max_salary": 36000},
+                    {"title": "Fishing and Hunting Workers", "min_salary": 22000, "max_salary": 45000}
+                ]
+            }
+        };
+
+        // Script to render the data
+        const container = document.getElementById('jobs-container');
+        const formatter = new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0
+        });
+
+        for (const sector in jobData) {
+            const sectorDiv = document.createElement('div');
+            sectorDiv.className = 'sector';
+
+            const sectorTitle = document.createElement('h2');
+            sectorTitle.textContent = `${sector} (NAICS ${jobData[sector].code})`;
+            sectorDiv.appendChild(sectorTitle);
+
+            const jobList = document.createElement('ul');
+            jobData[sector].jobs.forEach(job => {
+                const listItem = document.createElement('li');
+                
+                // Create a container for the job title and salary
+                const jobInfoDiv = document.createElement('div');
+                jobInfoDiv.className = 'job-info';
+
+                // Create and append the job link
+                const link = document.createElement('a');
+                const query = job.title.replace(/ /g, '+');
+                link.href = `https://www.indeed.com/jobs?q=${query}`;
+                link.textContent = job.title;
+                link.target = '_blank';
+                jobInfoDiv.appendChild(link);
+
+                // Create and append the salary span
+                const salarySpan = document.createElement('span');
+                salarySpan.className = 'salary';
+                salarySpan.textContent = `Est. Annual Salary: ${formatter.format(job.min_salary)} - ${formatter.format(job.max_salary)}`;
+                jobInfoDiv.appendChild(salarySpan);
+
+                listItem.appendChild(jobInfoDiv);
+
+                // Create a container for the checkboxes
+                const checkboxesDiv = document.createElement('div');
+                checkboxesDiv.className = 'checkbox-container';
+
+                // Add "Applied:" label
+                const appliedLabel = document.createElement('span');
+                appliedLabel.className = 'applied-label';
+                appliedLabel.textContent = 'Applied:';
+                checkboxesDiv.appendChild(appliedLabel);
+
+                // Create 10 checkboxes
+                for (let i = 0; i < 10; i++) {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    
+                    // Sanitize the job title to create a valid ID
+                    const sanitizedTitle = job.title.replace(/[^a-zA-Z0-9]/g, '');
+                    checkbox.id = `naics${jobData[sector].code}-${sanitizedTitle}-box${i}`;
+
+                    // Load saved state from localStorage
+                    if (localStorage.getItem(checkbox.id) === 'true') {
+                        checkbox.checked = true;
+                    }
+
+                    // Add event listener to save state on change
+                    checkbox.addEventListener('change', function() {
+                        localStorage.setItem(this.id, this.checked);
+                    });
+
+                    checkboxesDiv.appendChild(checkbox);
+                }
+                
+                listItem.appendChild(checkboxesDiv);
+                jobList.appendChild(listItem);
+            });
+
+            sectorDiv.appendChild(jobList);
+            container.appendChild(sectorDiv);
+        }
+    </script>
+</body>
+</html>
